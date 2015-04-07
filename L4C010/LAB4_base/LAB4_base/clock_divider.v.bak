@@ -1,0 +1,99 @@
+module clock_divider (clk, rst_n, clk_o, clk_o2);
+
+parameter DIV_CONST      = 10000000;
+parameter DIV_CONST2      = 2000000;
+
+reg tempClk;
+
+input clk;
+input rst_n;
+
+output reg clk_o;
+output reg clk_o2;
+
+reg [31:0] div;
+reg [31:0] div2;
+
+reg en;
+reg en2;
+
+always @ (posedge clk or negedge rst_n)
+begin
+	
+	if (!rst_n)
+	begin
+		div <= 0;
+		en <= 0;
+	end	
+	else
+	begin
+		if (div == DIV_CONST)
+		begin
+			div <= 0;
+			en <= 1;
+		end
+		else
+		begin
+			div <= div + 1;
+			en <= 0;
+		end
+	end
+end 
+
+
+
+
+always @ (posedge clk or negedge rst_n)
+begin
+	
+	if (!rst_n)
+	begin
+		div2 <= 0;
+		en2 <= 0;
+	end	
+	else
+	begin
+		if (div2 == DIV_CONST2)
+		begin
+			div2 <= 0;
+			en2 <= 1;
+		end
+		else
+		begin
+			div2 <= div2 + 1;
+			en2 <= 0;
+		end
+	end
+end 
+
+
+
+
+
+always @ (posedge clk or negedge rst_n)
+begin
+if (!rst_n)
+begin
+	clk_o <= 1'b0;
+end
+else if (en)
+	clk_o <= ~clk_o;
+end
+
+
+
+always @ (posedge clk or negedge rst_n)
+begin
+if (!rst_n)
+begin
+	clk_o2 <= 1'b0;
+end
+else if (en)
+	clk_o2 <= ~clk_o2;
+end
+
+
+
+
+
+endmodule
